@@ -337,6 +337,7 @@ __pycache__/
 # Tabs Studio
 *.tss
 
+<<<<<<< HEAD
 # Telerik's JustMock configuration file
 *.jmconfig
 
@@ -401,4 +402,11 @@ FodyWeavers.xsd
 *.sln.iml
 
 # ignore for now this folder
+=======
+# Operating system files
+.DS_Store
+Thumbs.db
+
+# Folders
+>>>>>>> 483191f (Commit Test Message)
 python/brutal-assault/
