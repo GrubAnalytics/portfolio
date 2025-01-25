@@ -1,3 +1,4 @@
+/* Base Styles - Desktop and larger screens */
 body {
     font-family: Arial, sans-serif;
     background-color: #f4f7fa;
@@ -47,7 +48,11 @@ header h1 {
     border-radius: 8px;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
     width: 200px;
+    display: flex;
+    justify-content: center;  /* Centers horizontally */
+    align-items: center;      /* Centers vertically */
 }
+
 .folder h3 {
     margin-top: 10px;
     color: #3e5b77;
@@ -66,4 +71,30 @@ footer {
     text-align: center;
     padding: 10px;
     width: 100%;
+}
+
+/* Media Queries - Mobile and Smaller Screens */
+@media screen and (max-width: 768px) {
+    .folders {
+        flex-direction: column; /* Stack the folders vertically on smaller screens */
+        align-items: center;    /* Center them horizontally */
+        gap: 20px;
+    }
+    .folder {
+        width: 80%;  /* Make folders take up more space on smaller screens */
+        padding: 15px;
+    }
+    header {
+        padding: 15px;  /* Reduce header padding */
+    }
+    .profile img {
+        width: 120px;
+        height: 120px;  /* Resize image on smaller screens */
+    }
+    .profile h2 {
+        font-size: 20px;  /* Smaller text size for profile name */
+    }
+    .profile p {
+        font-size: 14px;  /* Adjust text size for description */
+    }
 }
