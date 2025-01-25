@@ -1,3 +1,4 @@
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css'); 
 /* Base Styles - Desktop and larger screens */
 body {
     font-family: Arial, sans-serif;
@@ -41,29 +42,49 @@ header h1 {
     gap: 40px;
     margin-top: 50px;
 }
+
 .folder {
-    background-color: #ffffff;
-    padding: 20px;
-    text-align: center;
-    border-radius: 8px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-    width: 200px;
     display: flex;
-    justify-content: center;  /* Centers horizontally */
-    align-items: center;      /* Centers vertically */
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    border: 1px solid #ccc;
+    width: 200px;
+    height: 100px;
+    position: relative;
+}
+
+/* Make the entire folder clickable */
+.folder a {
+    display: block;
+    margin-top: 20px;
+    text-decoration: none;
+    color: inherit;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    text-align: center;
+}
+
+.folder i {
+    font-size: 50px;
+    color: #333;
+    margin-bottom: 10px; /* Space between icon and text */
+    vertical-align: middle; /* Ensures proper alignment */
+}
+
+.folder:hover {
+    background-color: #f4f4f4;
 }
 
 .folder h3 {
-    margin-top: 10px;
     color: #3e5b77;
-}
-.folder a {
-    display: block;
-    margin-top: 10px;
     text-decoration: none;
-    color: #3e5b77;
-    font-weight: bold;
 }
+
 footer {
     margin-top: 50px;
     background-color: #3e5b77;
@@ -72,6 +93,29 @@ footer {
     padding: 10px;
     width: 100%;
 }
+
+.list-inline {
+    padding-left: 0;
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+  }
+  
+  .list-inline-item {
+    margin: 0 10px;
+  }
+  
+  .list-inline-item a {
+    color: #333;
+    font-size: 30px;
+    text-decoration: none;
+  }
+  
+  .list-inline-item a:hover {
+    color: #007bff;
+  }
+  
 
 /* Media Queries - Mobile and Smaller Screens */
 @media screen and (max-width: 768px) {
