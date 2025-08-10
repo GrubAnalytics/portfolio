@@ -1,0 +1,49 @@
+Set up my existing Next.js 15 + TypeScript project to use Tailwind CSS v3 with the App Router and working global @apply support. 
+Please ensure the following configuration for maximum compatibility (with "type": "module" in package.json):
+
+1. Remove any incompatible Tailwind v4 and plugin dependencies:
+   npm uninstall tailwindcss @tailwindcss/postcss
+
+2. Install the correct dependencies for Tailwind v3:
+   npm install --save-dev tailwindcss@3 autoprefixer@latest postcss@latest
+
+3. Tailwind config:
+   Create a tailwind.config.cjs file at the project root:
+   /** @type {import('tailwindcss').Config} */
+   module.exports = {
+     content: [
+       './src/**/*.{js,ts,jsx,tsx,mdx}',
+     ],
+     theme: {
+       extend: {},
+     },
+     plugins: [],
+   };
+
+4. PostCSS config:
+   Create a postcss.config.cjs file at the project root:
+   module.exports = {
+     plugins: {
+       tailwindcss: {},
+       autoprefixer: {},
+     },
+   };
+
+5. Global CSS:
+   In your global CSS (e.g., src/app/globals.css), use:
+   @tailwind base;
+   @tailwind components;
+   @tailwind utilities;
+
+   .test-tailwind {
+     @apply bg-green-500 text-white;
+   }
+
+6. Clean up:
+   Delete any tailwind.config.js, tailwind.config.mjs, tailwind.config.ts, postcss.config.js, postcss.config.mjs, or postcss.config.ts files if they exist.
+
+7. Restart your dev server:
+   - Stop any running dev server (Ctrl + C in the terminal).
+   - Run npm run dev again.
+
+This will ensure Tailwind v3 works perfectly with Next.js 15, TypeScript, and the App Router, including global @apply support.
