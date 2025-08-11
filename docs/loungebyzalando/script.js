@@ -10,6 +10,8 @@ const scoreSummaryEl = document.getElementById('score-summary');
 const crossTabEl = document.getElementById('cross-tab');
 const topWordsNegEl = document.getElementById('top-words-neg');
 const topWordsPosEl = document.getElementById('top-words-pos');
+const topPhrasesNeg2El = document.getElementById('top-phrases-neg-2');
+const topPhrasesPos2El = document.getElementById('top-phrases-pos-2');
 const commentsTitleEl = document.getElementById('comments-title');
 const commentsTableEl = document.getElementById('comments-table');
 const commentsTbodyEl = commentsTableEl.getElementsByTagName('tbody')[0];
@@ -57,15 +59,52 @@ function updateCrossTab(filtered) {
 }
 
 function updateTopWords(filtered, sentimentType, element, linkClass) {
-    let allText = filtered.filter(r => r.sentiment_type === sentimentType).map(r => r.review ? r.review.toLowerCase() : '').join(' ');
-    allText = allText.replace(/[^a-z\s]/g, '');
-    let words = allText.split(/\s+/).filter(w => w && !stopWords.has(w) && w.length > 2);
-    let counts = {};
-    words.forEach(w => counts[w] = (counts[w] || 0) + 1);
-    let sorted = Object.entries(counts).sort((a, b) => b[1] - a[1]).slice(0, 10);
+    const relevantComments = filtered.filter(r => r.sentiment_type === sentimentType);
+    let wordCounts = {};
+    
+    // Count unique comments containing each canonical word
+    relevantComments.forEach(comment => {
+        let reviewText = comment.review ? comment.review.toLowerCase() : '';
+        let cleanText = reviewText.replace(/[^a-z\s]/g, '');
+        let words = cleanText.split(/\s+/).filter(w => w && !stopWords.has(w) && w.length > 2);
+        let uniqueCanonicals = new Set(words.map(getCanonicalWord));
+        uniqueCanonicals.forEach(canonical => {
+            wordCounts[canonical] = (wordCounts[canonical] || 0) + 1;
+        });
+    });
+    let sorted = Object.entries(wordCounts).sort((a, b) => b[1] - a[1]).slice(0, 10);
     let html = '<table><tr><th>Word</th><th>Count</th></tr>';
     sorted.forEach(([word, count]) => {
         html += `<tr><td><a href="#" class="${linkClass}" data-word="${word}">${word}</a></td><td>${formatNumber(count)}</td></tr>`;
+    });
+    html += '</table>';
+    element.innerHTML = html;
+}
+
+function updateTopPhrases(filtered, sentimentType, element, linkClass, ngramSize = 2) {
+    const relevantComments = filtered.filter(r => r.sentiment_type === sentimentType);
+    let phraseCounts = {};
+    relevantComments.forEach(comment => {
+        let reviewText = comment.review ? comment.review.toLowerCase() : '';
+        let cleanText = reviewText.replace(/[^a-z\s]/g, '');
+        let words = cleanText.split(/\s+/).filter(w => w && !stopWords.has(w) && w.length > 2);
+        let phrases = [];
+        for (let i = 0; i <= words.length - ngramSize; i++) {
+            let phrase = words.slice(i, i + ngramSize).join(' ');
+            phrases.push(getCanonicalPhrase(phrase));
+        }
+        let uniqueCanonicals = new Set(phrases);
+        uniqueCanonicals.forEach(canonical => {
+            phraseCounts[canonical] = (phraseCounts[canonical] || 0) + 1;
+        });
+    });
+    let sorted = Object.entries(phraseCounts)
+        .filter(([phrase, count]) => count >= 3)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 10);
+    let html = `<table><tr><th>${ngramSize === 2 ? 'Top Phrases (2 words)' : 'Top Phrases (3 words)'}</th><th>Count</th></tr>`;
+    sorted.forEach(([phrase, count]) => {
+        html += `<tr><td><a href="#" class="${linkClass}" data-word="${phrase}">${phrase}</a></td><td>${formatNumber(count)}</td></tr>`;
     });
     html += '</table>';
     element.innerHTML = html;
@@ -79,12 +118,27 @@ function updateCommentsTable(comments, wordFilter = null) {
         return;
     }
 
-    comments.slice(0, 20).forEach(row => {
+    comments.forEach(row => {
         const newRow = commentsTbodyEl.insertRow();
         let reviewText = row.review || '';
         if (wordFilter) {
-            const re = new RegExp(`\\b(${wordFilter})\\b`, 'gi');
-            reviewText = reviewText.replace(re, '<b>$1</b>');
+            // For highlighting, we need to be smarter about matching processed words/phrases
+            if (!wordFilter.includes(' ')) {
+                // Single word - use word boundary regex
+                const re = new RegExp(`\\b(${wordFilter})\\b`, 'gi');
+                reviewText = reviewText.replace(re, '<b>$1</b>');
+            } else {
+                // For phrases, we need to find the original words in the text
+                const phraseWords = wordFilter.split(' ');
+                let tempText = reviewText;
+                
+                // Try to highlight each word in the phrase
+                phraseWords.forEach(word => {
+                    const re = new RegExp(`\\b(${word})\\b`, 'gi');
+                    tempText = tempText.replace(re, '<b>$1</b>');
+                });
+                reviewText = tempText;
+            }
         }
         const sentimentClass = row.sentiment_type === 'positive' ? 'sentiment-pos' : (row.sentiment_type === 'negative' ? 'sentiment-neg' : 'sentiment-neu');
         newRow.innerHTML = `
@@ -113,25 +167,65 @@ function mainUpdate(wordFilter = null, sentimentType = null) {
     updateCrossTab(filtered);
     updateTopWords(filtered, 'negative', topWordsNegEl, 'word-link');
     updateTopWords(filtered, 'positive', topWordsPosEl, 'word-link-pos');
+    
+    // Update phrases (bigrams only)
+    updateTopPhrases(filtered, 'negative', topPhrasesNeg2El, 'word-link', 2);
+    updateTopPhrases(filtered, 'positive', topPhrasesPos2El, 'word-link-pos', 2);
 
     if (wordFilter && sentimentType) {
-        const wordRegex = new RegExp(`\\b${wordFilter}\\b`, 'i');
+        const canonicalFilter = getCanonicalPhrase(wordFilter);
         let commentsToShow = filtered.filter(row => {
             const sentimentMatch = row.sentiment_type === sentimentType;
-            const wordMatch = row.words && wordRegex.test(row.words);
-            const wordCount = (row.review || '').trim().split(/\s+/).length >= 10;
-            return sentimentMatch && wordMatch && wordCount;
+            let reviewText = (row.review ? row.review.toLowerCase() : '').replace(/[^a-z\s]/g, '');
+            let words = reviewText.split(/\s+/).filter(w => w && !stopWords.has(w) && w.length > 2);
+            if (!wordFilter.includes(' ')) {
+                // Single word: match canonical
+                return sentimentMatch && words.map(getCanonicalWord).includes(canonicalFilter);
+            } else {
+                // Phrase: match canonical phrase
+                return sentimentMatch && phraseInComment(canonicalFilter, words);
+            }
         });
         
         // Sort by date descending
         commentsToShow.sort((a, b) => new Date(b.date) - new Date(a.date));
 
-        commentsTitleEl.innerText = `Top ${commentsToShow.length > 20 ? 20 : commentsToShow.length} ${sentimentType} comments containing "${wordFilter}"`;
+        commentsTitleEl.innerText = `All ${commentsToShow.length} ${sentimentType} comments containing "${wordFilter}"`;
         updateCommentsTable(commentsToShow, wordFilter);
     } else {
         commentsTableEl.style.display = 'none';
         commentsTitleEl.style.display = 'none';
     }
+}
+
+// --- SMART MATCH HELPERS ---
+function getCanonicalWord(word) {
+    // Simple de-pluralization: 'services' -> 'service', but not 'business', 'class', etc.
+    if (word.length > 3 && word.endsWith('s') && !word.endsWith('ss')) {
+        return word.slice(0, -1);
+    }
+    return word;
+}
+
+function getCanonicalPhrase(phrase) {
+    // Canonicalize each word in the phrase
+    return phrase.split(' ').map(getCanonicalWord).join(' ');
+}
+
+function phraseInComment(canonicalPhrase, commentWords) {
+    // Returns true if the canonical phrase appears as consecutive canonical words in commentWords
+    const phraseWords = canonicalPhrase.split(' ');
+    for (let i = 0; i <= commentWords.length - phraseWords.length; i++) {
+        let match = true;
+        for (let j = 0; j < phraseWords.length; j++) {
+            if (getCanonicalWord(commentWords[i + j]) !== phraseWords[j]) {
+                match = false;
+                break;
+            }
+        }
+        if (match) return true;
+    }
+    return false;
 }
 
 // --- EVENT LISTENERS ---
