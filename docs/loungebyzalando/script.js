@@ -18,6 +18,7 @@ const commentsTbodyEl = commentsTableEl.getElementsByTagName('tbody')[0];
 const platformTabsEl = document.getElementById('platformTabs');
 const yearSliderEl = document.getElementById('yearRangeSlider');
 const sliderValuesEl = document.getElementById('sliderValues');
+const sentimentHistogramEl = document.getElementById('sentiment-histogram');
 
 // --- UPDATE FUNCTIONS ---
 function updateSummary(filtered) {
@@ -56,6 +57,63 @@ function updateCrossTab(filtered) {
     });
     table += '</table>';
     crossTabEl.innerHTML = table;
+}
+
+function updateSentimentHistogram(filtered) {
+    if (!sentimentHistogramEl) return;
+    
+    // Create bins for histogram (20 bins from -1 to 1)
+    const bins = [];
+    const binCount = 20;
+    const binSize = 2 / binCount; // Range from -1 to 1
+    
+    for (let i = 0; i < binCount; i++) {
+        bins.push({
+            min: -1 + (i * binSize),
+            max: -1 + ((i + 1) * binSize),
+            count: 0
+        });
+    }
+    
+    // Count sentiment scores in each bin
+    filtered.forEach(review => {
+        const sentiment = review.sentiment_raw;
+        if (sentiment != null) {
+            const binIndex = Math.min(Math.floor((sentiment + 1) / binSize), binCount - 1);
+            bins[binIndex].count++;
+        }
+    });
+    
+    // Find max count for scaling
+    const maxCount = Math.max(...bins.map(b => b.count));
+    
+    // Create histogram HTML
+    let html = '';
+    bins.forEach((bin, i) => {
+        const height = maxCount > 0 ? (bin.count / maxCount) * 180 : 0; // Max 180px height
+        const left = (i / binCount) * 100;
+        const width = (1 / binCount) * 100;
+        
+        // Color based on position
+        let color = '#ffc107'; // neutral (yellow)
+        if (bin.max < -0.12) color = '#d63384'; // negative (red)
+        else if (bin.min > 0.61) color = '#198754'; // positive (green)
+        
+        // Show count if significant
+        const showCount = bin.count > 0 && height > 20;
+        const countLabel = showCount ? `<div style="position: absolute; top: -15px; width: 100%; text-align: center; font-size: 9px; color: #333;">${bin.count}</div>` : '';
+        
+        html += `<div style="position: absolute; bottom: 0; left: ${left}%; width: ${width}%; height: ${height}px; background-color: ${color}; border: 1px solid #fff; box-sizing: border-box;" title="Range: ${bin.min.toFixed(2)} to ${bin.max.toFixed(2)}, Count: ${bin.count}">${countLabel}</div>`;
+    });
+    
+    // Add boundary lines
+    const negBoundaryPos = ((-0.12 + 1) / 2) * 100; // Convert -0.12 to percentage
+    const posBoundaryPos = ((0.61 + 1) / 2) * 100; // Convert 0.61 to percentage
+    
+    html += `<div style="position: absolute; left: ${negBoundaryPos}%; top: 0; bottom: 0; width: 2px; background-color: #dc3545; opacity: 0.8;" title="Negative/Neutral Boundary: -0.12"></div>`;
+    html += `<div style="position: absolute; left: ${posBoundaryPos}%; top: 0; bottom: 0; width: 2px; background-color: #198754; opacity: 0.8;" title="Neutral/Positive Boundary: 0.61"></div>`;
+    
+    sentimentHistogramEl.innerHTML = html;
 }
 
 function updateTopWords(filtered, sentimentType, element, linkClass) {
@@ -165,6 +223,7 @@ function mainUpdate(wordFilter = null, sentimentType = null) {
     updateSummary(filtered);
     updateStarTable(filtered);
     updateCrossTab(filtered);
+    updateSentimentHistogram(filtered);
     updateTopWords(filtered, 'negative', topWordsNegEl, 'word-link');
     updateTopWords(filtered, 'positive', topWordsPosEl, 'word-link-pos');
     
