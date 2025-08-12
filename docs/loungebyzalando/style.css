@@ -18,7 +18,20 @@ tr:nth-child(even) { background: #f9f9f9; }
 .year-slider { margin-bottom: 48px; font-size: 1.1em; }
 .slider-values { margin-left: 12px; font-weight: bold; }
 .slider-container { display: flex; align-items: center; gap: 12px; }
+.slider-container { position: relative; }
 #yearRangeSlider { width: 320px; margin: 0 16px; }
+
+/* Move noUiSlider tooltips below the slider handles */
+#yearRangeSlider .noUi-tooltip {
+	top: 36px !important;
+	bottom: auto !important;
+	background: #fff;
+	color: #222;
+	border: 1px solid #b3d9ff;
+	border-radius: 4px;
+	font-size: 1em;
+	box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+}
 .platform-tabs { display: flex; justify-content: center; gap: 16px; margin-bottom: 32px; flex-wrap: wrap; }
 .platform-tab { padding: 10px 28px; border-radius: 6px; background: #ececf6; color: #333; cursor: pointer; font-weight: 500; border: none; outline: none; transition: background 0.2s; }
 .platform-tab.active { background: #2d72d9; color: #fff; }

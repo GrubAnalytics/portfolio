@@ -322,12 +322,20 @@ function renderPlatformFilter() {
 }
 
 // --- INITIALIZATION ---
+
+// Custom tooltips below the slider handles
 noUiSlider.create(yearSliderEl, {
     start: [yearStart, yearEnd],
     connect: true,
     step: 1,
     range: { min: yearStart, max: yearEnd },
-    tooltips: [true, true],
+    tooltips: [{
+        to: v => `<span style='display:block; margin-top:8px;'>${Math.round(v)}</span>`,
+        from: v => Math.round(v)
+    }, {
+        to: v => `<span style='display:block; margin-top:8px;'>${Math.round(v)}</span>`,
+        from: v => Math.round(v)
+    }],
     format: { to: v => Math.round(v), from: v => Math.round(v) }
 });
 

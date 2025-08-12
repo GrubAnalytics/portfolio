@@ -8,7 +8,54 @@
 </head>
 <body>
 <div class="container">
-    <h1>Zalando Lounge Reviews Report</h1>
+
+<h1>Customer reviews analysis</h1>
+
+    <!-- Executive Summary -->
+    <div style="background: #e7f3ff; border: 1px solid #b3d9ff; border-radius: 8px; padding: 20px; margin: 20px 0;">
+        <h2 style="margin-top: 0; color: #0d47a1;">📋 Executive Summary</h2>
+        <div style="font-size: 0.95em; color: #1565c0; line-height: 1.6;">
+            <div style="margin-bottom: 15px;">
+                <strong>Objective:</strong> Understanding customer sentiment and identifying pain points from the user's perspective for both Zalando and Lounge by Zalando apps to drive product improvements.
+            </div>
+            <div style="margin-bottom: 15px;">
+                <strong>Methodology:</strong> Data was retrieved from Google Play Store for both Zalando and Lounge by Zalando apps. Customer sentiment was analyzed by combining text emotional tone with star ratings, using machine learning to identify natural sentiment boundaries.
+            </div>
+            <ul style="margin: 10px 0; padding-left: 20px;">
+                <li><strong>Key Finding:</strong> The majority of reviews are in the positive territory, but there are clear, recurring pain points that can be addressed to further improve user experience.</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Key Recommendations -->
+    <div style="background: #fff3e0; border: 1px solid #ffcc80; border-radius: 8px; padding: 20px; margin: 20px 0;">
+        <h2 style="margin-top: 0; color: #e65100;">🎯 Product Development Recommendations for Lounge by Zalando</h2>
+        <div style="font-size: 0.95em; color: #bf360c; line-height: 1.6;">
+            <p><em>Based on negative and neutral feedback patterns, here are two product development opportunities:</em></p>
+            
+            <div style="margin: 15px 0;">
+                <h3 style="color: #e65100; margin-bottom: 8px;">1. Search Functionality</h3>
+                <p><strong>Why?</strong> 28.3% of negative and neutral comments (343 reviews) mention search-related issues through direct keyword analysis. Comments frequently mention lack of search functionality, difficulty finding products, or poor filtering options, which makes customers feel lost and frustrated during their shopping experience.</p>
+                <ul style="margin: 8px 0; padding-left: 20px;">
+                    <li><strong>Phase 1:</strong> Add basic search bar to main interface with simple text-based product search</li>
+                    <li><strong>Phase 2:</strong> Implement smart search that starts to give recommendations based on previous behavior of the user, including purchase history, browsing patterns, and saved items</li>
+                    <li><strong>Vision:</strong> AI-powered search suggestions and personalized results based on user behavior and preferences</li>
+                </ul>
+            </div>
+            
+            <div style="margin: 15px 0;">
+                <h3 style="color: #e65100; margin-bottom: 8px;">2. Language Support Enhancement</h3>
+                <p><strong>Why?</strong> 8.1% of negative and neutral comments (98 reviews) mention language barriers through comprehensive keyword analysis. Many customers express frustration with region-locked language settings and don't speak the language of the country where they live, needing alternative language options.</p>
+                <ul style="margin: 8px 0; padding-left: 20px;">
+                    <li><strong>Phase 1:</strong> Add English language option for Lounge by Zalando app regardless of location</li>
+                    <li><strong>Phase 2:</strong> Implement full localization including product descriptions, customer service, help documentation, and size guides, with region-specific currency and sizing preferences</li>
+                    <li><strong>Vision:</strong> Multi-language support with region-specific content, recommendations, and seamless language switching</li>
+                </ul>
+            </div>
+            
+        </div>
+    </div>
+<h2>Sentiment Score Distribution</h2>
     <div class="platform-tabs" id="platformTabs"></div>
     <div class="year-slider">
         <label><b>Filter by year range:</b></label>
@@ -19,33 +66,9 @@
     </div>
     <div class="summary" id="summary"></div>
     
-    <!-- Sentiment Analysis Explanation -->
-    <div style="background: #f8f9fa; border: 1px solid #dee2e6; border-radius: 8px; padding: 16px; margin: 20px 0;">
-        <details style="cursor: pointer;">
-            <summary style="font-weight: bold; color: #495057; margin-bottom: 12px;">
-                ℹ️ How Sentiment Analysis Works
-            </summary>
-            <div style="font-size: 0.9em; color: #6c757d; line-height: 1.5;">
-                <p><strong>How Sentiment is calculated (4 Simple Steps):</strong></p>
-                <ol style="margin: 8px 0; padding-left: 20px;">
-                    <li><strong>Analyze Text:</strong> Detect the emotional tone of the review (e.g., "excellent" = positive, "terrible" = negative).</li>
-                    <li><strong>Consider Star Rating:</strong> 1-2 stars lower the score, 4-5 stars raise it, and 3 stars are always neutral, regardless of the text.</li>
-                    <li><strong>Pattern Detection:</strong> Reviews with similar text and star patterns are grouped together automatically (no pre-set rules or human bias).</li>
-                    <li><strong>Set Boundaries:</strong> Negative (&lt; -0.12), Neutral (-0.12 to 0.61), Positive (&gt; 0.61). These cutoffs were found by analyzing patterns in the data, then checked manually for clarity.</li>
-                </ol>
-                <p style="margin-top: 12px;"><em>💡 Boundaries are based on the data, but reviewed manually for common sense.</em></p>
-                <div style="margin-top: 10px; background: #fff3cd; border: 1px solid #ffeeba; border-radius: 6px; padding: 10px; color: #856404; font-size: 0.95em;">
-                    <strong>Why do some neutral comments sound positive?</strong><br>
-                    Some reviews may sound positive, but if the sentiment score is below 0.61 or the review has 3 stars, it is classified as neutral. Only the most enthusiastic feedback is marked as positive.<br><br>
-                    <strong>Edge Cases:</strong> A review with 5 stars and mild praise (like "works well" or "like this app") can still be neutral if the language isn't strongly positive. This avoids overestimating positivity from generic or mixed comments.
-                </div>
-            </div>
-        </details>
-    </div>
-
     <!-- Sentiment Distribution Histogram -->
     <div style="margin: 20px 0;">
-        <h2>Sentiment Score Distribution</h2>
+        
         <div style="position: relative; margin: 20px 0;">
             <!-- Y-axis label -->
             <div style="position: absolute; left: -40px; top: 50%; transform: rotate(-90deg); transform-origin: center; font-size: 0.8em; color: #666;">Review Count</div>
@@ -78,6 +101,30 @@
             </div>
         </div>
     </div>
+    
+    <!-- Sentiment Analysis Explanation -->
+    <div style="background: #f8f9fa; border: 1px solid #dee2e6; border-radius: 8px; padding: 16px; margin: 20px 0;">
+        <details style="cursor: pointer;">
+            <summary style="font-weight: bold; color: #495057; margin-bottom: 12px;">
+                ℹ️ How Sentiment Analysis Works
+            </summary>
+            <div style="font-size: 0.9em; color: #6c757d; line-height: 1.5;">
+                <p><strong>How Sentiment is calculated (4 Simple Steps):</strong></p>
+                <ol style="margin: 8px 0; padding-left: 20px;">
+                    <li><strong>Analyze Text:</strong> Detect the emotional tone of the review (e.g., "excellent" = positive, "terrible" = negative).</li>
+                    <li><strong>Consider Star Rating:</strong> 1-2 stars lower the score, 4-5 stars raise it, and 3 stars are always neutral, regardless of the text.</li>
+                    <li><strong>Pattern Detection:</strong> Reviews with similar text and star patterns are grouped together automatically (no pre-set rules or human bias).</li>
+                    <li><strong>Set Boundaries:</strong> Negative (&lt; -0.12), Neutral (-0.12 to 0.61), Positive (&gt; 0.61). These cutoffs were found by analyzing patterns in the data, then checked manually for clarity.</li>
+                </ol>
+                <p style="margin-top: 12px;"><em>💡 Boundaries are based on the data, but reviewed manually for common sense.</em></p>
+                <div style="margin-top: 10px; background: #fff3cd; border: 1px solid #ffeeba; border-radius: 6px; padding: 10px; color: #856404; font-size: 0.95em;">
+                    <strong>Why do some neutral comments sound positive?</strong><br>
+                    Some reviews may sound positive, but if the sentiment score is below 0.61 or the review has 3 stars, it is classified as neutral. Only the most enthusiastic feedback is marked as positive.<br><br>
+                    <strong>Edge Cases:</strong> A review with 5 stars and mild praise (like "works well" or "like this app") can still be neutral if the language isn't strongly positive. This avoids overestimating positivity from generic or mixed comments.
+                </div>
+            </div>
+        </details>
+    </div>
 
     <div class="flex-row">
         <div>
@@ -89,64 +136,77 @@
             <div id="cross-tab"></div>
         </div>
     </div>
-    <div class="flex-row">
-        <div style="flex:1;">
-            <h2>Top 10 Words in Negative Reviews</h2>
-            <div id="word-instructions-neg" style="margin-bottom:12px;color:#555;font-size:0.9em;">
-                <em>Click a word to see comments containing it.</em>
+
+    <!-- Data Deep Dive Section -->
+    <div style="background: #f8f9fa; border: 1px solid #dee2e6; border-radius: 8px; padding: 16px; margin: 20px 0;">
+        <details style="cursor: pointer;">
+            <summary style="font-weight: bold; color: #495057; margin-bottom: 12px;">
+                📊 Data Deep Dive - Word & Phrase Analysis
+            </summary>
+            <div class="flex-row">
+                <div style="flex:1;">
+                    <h2>Top 10 Words in Negative Reviews</h2>
+                    <div id="word-instructions-neg" style="margin-bottom:12px;color:#555;font-size:0.9em;">
+                        <em>Click a word to see comments containing it.</em>
+                    </div>
+                    <div id="top-words-neg"></div>
+                </div>
+                <div style="flex:1;">
+                    <h2>Top 10 Words in Neutral Reviews</h2>
+                    <div id="word-instructions-neu" style="margin-bottom:12px;color:#555;font-size:0.9em;">
+                        <em>Click a word to see comments containing it.</em>
+                    </div>
+                    <div id="top-words-neu"></div>
+                </div>
+                <div style="flex:1;">
+                    <h2>Top 10 Words in Positive Reviews</h2>
+                    <div id="word-instructions-pos" style="margin-bottom:12px;color:#555;font-size:0.9em;">
+                        <em>Click a word to see comments containing it.</em>
+                    </div>
+                    <div id="top-words-pos"></div>
+                </div>
             </div>
-            <div id="top-words-neg"></div>
-        </div>
-        <div style="flex:1;">
-            <h2>Top 10 Words in Neutral Reviews</h2>
-            <div id="word-instructions-neu" style="margin-bottom:12px;color:#555;font-size:0.9em;">
-                <em>Click a word to see comments containing it.</em>
+            <div class="flex-row">
+                <div style="flex:1;">
+                    <h2>Top Phrases in Negative Reviews (2 words)</h2>
+                    <div id="phrase-instructions-neg" style="margin-bottom:12px;color:#555;font-size:0.9em;">
+                        <em>Click a phrase to see comments containing it.</em>
+                    </div>
+                    <div id="top-phrases-neg-2"></div>
+                </div>
+                <div style="flex:1;">
+                    <h2>Top Phrases in Neutral Reviews (2 words)</h2>
+                    <div id="phrase-instructions-neu" style="margin-bottom:12px;color:#555;font-size:0.9em;">
+                        <em>Click a phrase to see comments containing it.</em>
+                    </div>
+                    <div id="top-phrases-neu-2"></div>
+                </div>
+                <div style="flex:1;">
+                    <h2>Top Phrases in Positive Reviews (2 words)</h2>
+                    <div id="phrase-instructions-pos" style="margin-bottom:12px;color:#555;font-size:0.9em;">
+                        <em>Click a phrase to see comments containing it.</em>
+                    </div>
+                    <div id="top-phrases-pos-2"></div>
+                </div>
             </div>
-            <div id="top-words-neu"></div>
-        </div>
-        <div style="flex:1;">
-            <h2>Top 10 Words in Positive Reviews</h2>
-            <div id="word-instructions-pos" style="margin-bottom:12px;color:#555;font-size:0.9em;">
-                <em>Click a word to see comments containing it.</em>
+            
+            <!-- Comments Table (shows when word/phrase is clicked) -->
+            <div style="margin-top: 20px;">
+                <h2 id="comments-title" style="display:none;">Comments</h2>
+                <table id="comments-table" style="display:none;">
+                    <thead>
+                        <tr>
+                            <th>Score</th>
+                            <th>Sentiment</th>
+                            <th>Review</th>
+                            <th style="width:120px;">Date</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
             </div>
-            <div id="top-words-pos"></div>
-        </div>
+        </details>
     </div>
-    <div class="flex-row">
-        <div style="flex:1;">
-            <h2>Top Phrases in Negative Reviews (2 words)</h2>
-            <div id="phrase-instructions-neg" style="margin-bottom:12px;color:#555;font-size:0.9em;">
-                <em>Click a phrase to see comments containing it.</em>
-            </div>
-            <div id="top-phrases-neg-2"></div>
-        </div>
-        <div style="flex:1;">
-            <h2>Top Phrases in Neutral Reviews (2 words)</h2>
-            <div id="phrase-instructions-neu" style="margin-bottom:12px;color:#555;font-size:0.9em;">
-                <em>Click a phrase to see comments containing it.</em>
-            </div>
-            <div id="top-phrases-neu-2"></div>
-        </div>
-        <div style="flex:1;">
-            <h2>Top Phrases in Positive Reviews (2 words)</h2>
-            <div id="phrase-instructions-pos" style="margin-bottom:12px;color:#555;font-size:0.9em;">
-                <em>Click a phrase to see comments containing it.</em>
-            </div>
-            <div id="top-phrases-pos-2"></div>
-        </div>
-    </div>
-    <h2 id="comments-title" style="display:none;">Comments</h2>
-    <table id="comments-table" style="display:none;">
-        <thead>
-            <tr>
-                <th>Score</th>
-                <th>Sentiment</th>
-                <th>Review</th>
-                <th style="width:120px;">Date</th>
-            </tr>
-        </thead>
-        <tbody></tbody>
-    </table>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.1/nouislider.min.js"></script>
 <script>
