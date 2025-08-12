@@ -26,14 +26,19 @@
                 ℹ️ How Sentiment Analysis Works
             </summary>
             <div style="font-size: 0.9em; color: #6c757d; line-height: 1.5;">
-                <p><strong>How We Calculate Sentiment (4 Simple Steps):</strong></p>
+                <p><strong>How Sentiment is calculated (4 Simple Steps):</strong></p>
                 <ol style="margin: 8px 0; padding-left: 20px;">
-                    <li><strong>Analyze Text:</strong> Extract emotional tone from words ("excellent" = positive, "terrible" = negative)</li>
-                    <li><strong>Consider Star Rating:</strong> 1-2 stars push score down, 4-5 stars push up</li>
-                    <li><strong>Machine Learning:</strong> AI finds natural patterns in all 8,700+ reviews</li>
-                    <li><strong>Smart Boundaries:</strong> Negative (&lt; -0.12), Neutral (-0.12 to 0.61), Positive (&gt; 0.61)</li>
+                    <li><strong>Analyze Text:</strong> Detect the emotional tone of the review (e.g., "excellent" = positive, "terrible" = negative).</li>
+                    <li><strong>Consider Star Rating:</strong> 1-2 stars lower the score, 4-5 stars raise it, and 3 stars are always neutral, regardless of the text.</li>
+                    <li><strong>Pattern Detection:</strong> Reviews with similar text and star patterns are grouped together automatically (no pre-set rules or human bias).</li>
+                    <li><strong>Set Boundaries:</strong> Negative (&lt; -0.12), Neutral (-0.12 to 0.61), Positive (&gt; 0.61). These cutoffs were found by analyzing patterns in the data, then checked manually for clarity.</li>
                 </ol>
-                <p style="margin-top: 12px;"><em>💡 No human bias - boundaries determined purely by your data!</em></p>
+                <p style="margin-top: 12px;"><em>💡 Boundaries are based on the data, but reviewed manually for common sense.</em></p>
+                <div style="margin-top: 10px; background: #fff3cd; border: 1px solid #ffeeba; border-radius: 6px; padding: 10px; color: #856404; font-size: 0.95em;">
+                    <strong>Why do some neutral comments sound positive?</strong><br>
+                    Some reviews may sound positive, but if the sentiment score is below 0.61 or the review has 3 stars, it is classified as neutral. Only the most enthusiastic feedback is marked as positive.<br><br>
+                    <strong>Edge Cases:</strong> A review with 5 stars and mild praise (like "works well" or "like this app") can still be neutral if the language isn't strongly positive. This avoids overestimating positivity from generic or mixed comments.
+                </div>
             </div>
         </details>
     </div>
@@ -93,6 +98,13 @@
             <div id="top-words-neg"></div>
         </div>
         <div style="flex:1;">
+            <h2>Top 10 Words in Neutral Reviews</h2>
+            <div id="word-instructions-neu" style="margin-bottom:12px;color:#555;font-size:0.9em;">
+                <em>Click a word to see comments containing it.</em>
+            </div>
+            <div id="top-words-neu"></div>
+        </div>
+        <div style="flex:1;">
             <h2>Top 10 Words in Positive Reviews</h2>
             <div id="word-instructions-pos" style="margin-bottom:12px;color:#555;font-size:0.9em;">
                 <em>Click a word to see comments containing it.</em>
@@ -107,6 +119,13 @@
                 <em>Click a phrase to see comments containing it.</em>
             </div>
             <div id="top-phrases-neg-2"></div>
+        </div>
+        <div style="flex:1;">
+            <h2>Top Phrases in Neutral Reviews (2 words)</h2>
+            <div id="phrase-instructions-neu" style="margin-bottom:12px;color:#555;font-size:0.9em;">
+                <em>Click a phrase to see comments containing it.</em>
+            </div>
+            <div id="top-phrases-neu-2"></div>
         </div>
         <div style="flex:1;">
             <h2>Top Phrases in Positive Reviews (2 words)</h2>

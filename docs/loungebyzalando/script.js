@@ -9,8 +9,10 @@ const summaryEl = document.getElementById('summary');
 const scoreSummaryEl = document.getElementById('score-summary');
 const crossTabEl = document.getElementById('cross-tab');
 const topWordsNegEl = document.getElementById('top-words-neg');
+const topWordsNeuEl = document.getElementById('top-words-neu');
 const topWordsPosEl = document.getElementById('top-words-pos');
 const topPhrasesNeg2El = document.getElementById('top-phrases-neg-2');
+const topPhrasesNeu2El = document.getElementById('top-phrases-neu-2');
 const topPhrasesPos2El = document.getElementById('top-phrases-pos-2');
 const commentsTitleEl = document.getElementById('comments-title');
 const commentsTableEl = document.getElementById('comments-table');
@@ -225,10 +227,12 @@ function mainUpdate(wordFilter = null, sentimentType = null) {
     updateCrossTab(filtered);
     updateSentimentHistogram(filtered);
     updateTopWords(filtered, 'negative', topWordsNegEl, 'word-link');
+    updateTopWords(filtered, 'neutral', topWordsNeuEl, 'word-link-neu');
     updateTopWords(filtered, 'positive', topWordsPosEl, 'word-link-pos');
-    
+
     // Update phrases (bigrams only)
     updateTopPhrases(filtered, 'negative', topPhrasesNeg2El, 'word-link', 2);
+    updateTopPhrases(filtered, 'neutral', topPhrasesNeu2El, 'word-link-neu', 2);
     updateTopPhrases(filtered, 'positive', topPhrasesPos2El, 'word-link-pos', 2);
 
     if (wordFilter && sentimentType) {
@@ -245,10 +249,8 @@ function mainUpdate(wordFilter = null, sentimentType = null) {
                 return sentimentMatch && phraseInComment(canonicalFilter, words);
             }
         });
-        
         // Sort by date descending
         commentsToShow.sort((a, b) => new Date(b.date) - new Date(a.date));
-
         commentsTitleEl.innerText = `All ${commentsToShow.length} ${sentimentType} comments containing "${wordFilter}"`;
         updateCommentsTable(commentsToShow, wordFilter);
     } else {
@@ -296,6 +298,10 @@ document.addEventListener('click', function(e) {
     if (e.target.classList.contains('word-link-pos')) {
         e.preventDefault();
         mainUpdate(e.target.dataset.word, 'positive');
+    }
+    if (e.target.classList.contains('word-link-neu')) {
+        e.preventDefault();
+        mainUpdate(e.target.dataset.word, 'neutral');
     }
 });
 
